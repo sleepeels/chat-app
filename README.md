@@ -1,3 +1,12 @@
+# chat-app
+
+real-time simple chat app
+
+## tech
+
+ReactJS + Firebase
+Firestore collection: messages
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

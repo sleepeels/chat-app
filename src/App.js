@@ -1,24 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+// react hooks
+import { createContext, useContext } from "react";
+
+import SignIn from "./components/SignIn";
+import SignOut from "./components/SignOut";
+import ChatRoom from "./components/ChatRoom";
+
+// firebase sdk
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
+
+// firebase hooks
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
+// firebase init
+firebase.initializeApp({
+  // config
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIM,
+  projectId: process.env.REACT_APP_PROJ_ID,
+  storageBucket: process.env.REACT_APP_STORE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_SEND_ID,
+  appId: process.env.REACT_APP_APP_ID,
+});
+
+// objects for auth and store
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+
+const authObj = { auth, firestore, firebase, useCollectionData };
+
+export const AuthContext = createContext(authObj);
 
 function App() {
+  const [user] = useAuthState(auth);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={authObj}>
+      <div className="App">
+        <header>
+          <SignOut auth={auth} />
+        </header>
+
+        <section>
+          {user ? (
+            <ChatRoom
+              auth={auth}
+              firestore={firestore}
+              useCollectionData={useCollectionData}
+              firebase={firebase}
+            />
+          ) : (
+            <SignIn />
+          )}
+        </section>
+      </div>
+    </AuthContext.Provider>
   );
 }
 
