@@ -42,21 +42,10 @@ function App() {
     <AuthContext.Provider value={authObj}>
       <div className="App">
         <header>
-          <SignOut auth={auth} />
+          <SignOut />
         </header>
 
-        <section>
-          {user ? (
-            <ChatRoom
-              auth={auth}
-              firestore={firestore}
-              useCollectionData={useCollectionData}
-              firebase={firebase}
-            />
-          ) : (
-            <SignIn />
-          )}
-        </section>
+        <section>{user ? <ChatRoom /> : <SignIn />}</section>
       </div>
     </AuthContext.Provider>
   );
